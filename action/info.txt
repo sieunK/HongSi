@@ -1,0 +1,4 @@
+argc: 3
+..\Release\KLTaggerTC
+user
+question.txt

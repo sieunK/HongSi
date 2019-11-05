@@ -1,0 +1,129 @@
+﻿<!DOCTYPE HTML>
+<!--
+    Editorial by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Elements - Editorial by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Header -->
+                <header id="header">
+                    <h2>산업안전 보건기준에 관한 규칙</h2>
+                </header>
+
+                <!-- Content -->
+                <section>
+                    <!-- Content -->
+                </section>
+
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+
+                <!-- Search -->
+                <section id="search" class="alt">
+                    <form method="post" action="#">
+                        <input type="text" name="query" id="query" placeholder="Search" />
+                    </form>
+                </section>
+
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>조문제목</h2>
+                    </header>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src = "assets/js/main.js"></script>
+    <script>
+        function nl2br(str){  
+            return str.replace(/\n/g, "<br />");  
+        }
+        $.ajax({
+            type:"GET",
+            url:"../data/test.xml",
+            dataType: "xml",
+            success: function(xml) {
+                $(xml).find('statute').eq(4).each(function(){
+                    var header = '<h2>';
+                    header += $(this).find('title').text();
+                    header += '</h2>';
+                    $('#header').html(header);
+                    $('#sidebar #menu .major').html(header);
+                    var str="";
+                    str+='<ul>';
+                    var num = 0;
+                    $(this).find('chapter').each(function() {
+                        var chapter = $(this).attr("num");
+                        var chapter_name = $(this).attr("name");
+                        str+='<li><span class="opener">'+
+                        chapter+
+                        '장:' + chapter_name +'</span><ul>';
+                        $(this).find('section').each(function() {
+                            var section = $(this).attr("num");
+                            if(section != "") {
+                                str+='<li><span class="sub-opener">'+
+                                section+
+                                '절</span><ul>';
+                            }
+                            $(this).find('article').each(function() {
+                                var article = $(this).attr("num");
+                                var head = $(this).attr("name");
+                                var content = $(this).find("content").text();
+                                content = nl2br(content);
+                                str+='<li><a href="#" class = '+num+'>'+
+                                $(this).attr("num")+
+                                '조</a></li>';
+                                $(document).find('#main .inner section').append(
+                                    '<h3 id='+num+'>'+head+'</h3>'+
+                                    '<p class='+num+'>'+
+                                    content+
+                                    '</p><hr class="major" />');
+                                num++;    
+                            });
+                            if(section != "") {    
+                                str+='</ul></li>';    
+                            }  
+                        });
+                    str+='</ul></li>';   
+                    });
+                    str+='</ul>';
+                $('#menu').append(str);
+                });
+            }
+        }); 
+        $.getScript("assets/js/main.js", function(data, textStatus, jqxhr) {
+            console.log(data); //data returned
+            console.log(textStatus); //success
+            console.log(jqxhr.status); //200
+            console.log('Load was performed.');
+        });
+    </script>
+</body>
+</html>
